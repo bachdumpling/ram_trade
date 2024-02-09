@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:ram_trade/pages/profile_screen.dart';
+import 'package:ram_trade/pages/splash_screen.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'screens/login_screen.dart';
+import 'pages/login_screen.dart';
 
 void main() async {
   await Supabase.initialize(
@@ -25,6 +27,12 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: const LoginScreen(),
+      initialRoute: '/',
+      routes: <String, WidgetBuilder>{
+        // '/': (_) => const SplashPage(),
+        '/login': (_) => const LoginScreen(),
+        '/profile': (_) => const ProfileScreen(),
+      },
     );
   }
 }
