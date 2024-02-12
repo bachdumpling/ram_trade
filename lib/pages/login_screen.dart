@@ -3,7 +3,6 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:ram_trade/pages/profile_screen.dart';
 import 'package:ram_trade/main.dart';
-import 'dart:developer' as developer;
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -38,11 +37,13 @@ class _LoginScreenState extends State<LoginScreen> {
     supabase.auth.onAuthStateChange.listen((data) {
       final event = data.event;
       if (event == AuthChangeEvent.signedIn) {
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(
-            builder: (context) => const ProfileScreen(),
-          ),
-        );
+        if (mounted) {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (context) => const Home(),
+            ),
+          );
+        }
       }
     });
   }
@@ -114,7 +115,6 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _createOrUpdateUserProfile(User user) async {
-    print('From createOrUpdateUserProfile User: $user');
     final profileResult =
         await supabase.from('profiles').select().eq('id', user.id);
 
@@ -135,3 +135,19 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 }
+
+// if (authResponse.user != null) {
+//   // Assuming you have a method to check if the user profile exists.
+//   bool profileExists = await _checkUserProfileExists(authResponse.user!.id);
+//   if (!profileExists) {
+//     Navigator.of(context).pushReplacement(
+//       MaterialPageRoute(builder: (context) => const OnboardingScreen()),
+//     );
+//   } else {
+//     Navigator.of(context).pushReplacement(
+//       MaterialPageRoute(builder: (context) => const ProfileScreen()),
+//     );
+//   }
+// } else {
+//   throw 'An error occurred while signing in.';
+// }

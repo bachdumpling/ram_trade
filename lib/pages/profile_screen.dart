@@ -1,6 +1,5 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:ram_trade/components/ProfilePicture.dart';
 import 'package:ram_trade/main.dart';
 import 'package:ram_trade/pages/login_screen.dart';
 
@@ -8,12 +7,22 @@ class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _ProfileScreenState createState() => _ProfileScreenState();
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  String? profileImageUrl;
+  String? _profileImageUrl;
   String? fullName = 'Ram Trade User';
+  final TextEditingController _firstNameController = TextEditingController();
+  final TextEditingController _lastNameController = TextEditingController();
+
+  @override
+  void dispose() {
+    _firstNameController.dispose();
+    _lastNameController.dispose();
+    super.dispose();
+  }
 
   @override
   void initState() {
@@ -21,43 +30,56 @@ class _ProfileScreenState extends State<ProfileScreen> {
     _loadUserProfile();
   }
 
+  // Load the user's profile from the database.
   void _loadUserProfile() async {
-    final user = supabase.auth.currentUser;
-    if (user != null) {
-      final response = await supabase
-          .from('profiles')
-          .select('first_name, last_name, profile_url')
-          .eq('id', user.id)
-          .single();
+    final userId = supabase.auth.currentUser!.id;
 
-      final data = response;
+    final data = await supabase
+        .from('profiles')
+        .select('first_name, last_name, profile_url')
+        .eq('id', userId)
+        .single();
+
+    setState(() {
+      fullName = "${data['first_name']} ${data['last_name']}";
+      _firstNameController.text = data['first_name'];
+      _lastNameController.text = data['last_name'];
+      _profileImageUrl = data['profile_url'];
+    });
+  }
+
+  // Update the user's profile in the database.
+  void _updateUserProfile(BuildContext context) async {
+    final userId = supabase.auth.currentUser!.id;
+    final updates = {
+      'id': userId,
+      'first_name': _firstNameController.text,
+      'last_name': _lastNameController.text,
+    };
+
+    try {
+      await supabase.from('profiles').upsert(updates).eq('id', userId);
+
+      // Check if the widget is still mounted before calling setState
+      if (!mounted) return;
+
       setState(() {
-        fullName = "${data['first_name']} ${data['last_name']}";
-        profileImageUrl = data['profile_url'];
+        fullName =
+            "${_firstNameController.text.toString()} ${_lastNameController.text.toString()}";
       });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Profile updated successfully!')),
+      );
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(error.toString())),
+      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    Widget profileImageWidget;
-    if (profileImageUrl != null && profileImageUrl!.isNotEmpty) {
-      profileImageWidget = Image.network(
-        profileImageUrl!,
-        width: 100,
-        height: 100,
-        fit: BoxFit.cover,
-      );
-    } else {
-      // Use AssetImage when profileImageUrl is not available
-      profileImageWidget = Image.asset(
-        'assets/images/default-profile-picture.png',
-        width: 100,
-        height: 100,
-        fit: BoxFit.cover,
-      );
-    }
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Profile'),
@@ -79,15 +101,46 @@ class _ProfileScreenState extends State<ProfileScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            ClipOval(
-              child: profileImageWidget,
-            ),
+            ProfilePicture(
+                profileImageUrl: _profileImageUrl,
+                onUpload: (profileImageUrl) async {
+                  setState(() {
+                    _profileImageUrl = profileImageUrl;
+                  });
+
+                  // Update the profile picture URL in the database.
+                  final userId = supabase.auth.currentUser!.id;
+                  await supabase.from('profiles').update({
+                    'profile_url': profileImageUrl,
+                  }).eq("id", userId);
+                }),
             const SizedBox(height: 16),
             Text(
               fullName ?? '',
-              style: Theme.of(context).textTheme.headlineMedium,
+              style: const TextStyle(fontSize: 32),
             ),
-            const SizedBox(height: 32),
+            const SizedBox(height: 16),
+            Padding(
+              padding: const EdgeInsets.all(20),
+              child: TextField(
+                controller: _firstNameController,
+                decoration: const InputDecoration(
+                  labelText: 'First Name',
+                ),
+              ),
+            ),
+            Padding(
+                padding: const EdgeInsets.all(20),
+                child: TextField(
+                  controller: _lastNameController,
+                  decoration: const InputDecoration(
+                    labelText: 'Last Name',
+                  ),
+                )),
+            ElevatedButton(
+              onPressed: () async => _updateUserProfile(context),
+              child: const Text('Update Profile'),
+            ),
           ],
         ),
       ),
