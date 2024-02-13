@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:ram_trade/components/ProfilePicture.dart';
+import 'package:ram_trade/components/profile_picture.dart';
 import 'package:ram_trade/main.dart';
 import 'package:ram_trade/pages/login_screen.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -16,6 +17,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String? fullName = 'Ram Trade User';
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
+  var _loading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserProfile();
+  }
 
   @override
   void dispose() {
@@ -24,57 +32,87 @@ class _ProfileScreenState extends State<ProfileScreen> {
     super.dispose();
   }
 
-  @override
-  void initState() {
-    super.initState();
-    _loadUserProfile();
-  }
-
   // Load the user's profile from the database.
-  void _loadUserProfile() async {
-    final userId = supabase.auth.currentUser!.id;
-
-    final data = await supabase
-        .from('profiles')
-        .select('first_name, last_name, profile_url')
-        .eq('id', userId)
-        .single();
-
+  Future<void> _loadUserProfile() async {
     setState(() {
-      fullName = "${data['first_name']} ${data['last_name']}";
-      _firstNameController.text = data['first_name'];
-      _lastNameController.text = data['last_name'];
-      _profileImageUrl = data['profile_url'];
+      _loading = true;
     });
+
+    try {
+      final userId = supabase.auth.currentUser!.id;
+
+      final data = await supabase
+          .from('profiles')
+          .select('first_name, last_name, profile_url')
+          .eq('id', userId)
+          .single();
+      setState(() {
+        fullName = "${data['first_name']} ${data['last_name']}";
+        _firstNameController.text = data['first_name'];
+        _lastNameController.text = data['last_name'];
+        _profileImageUrl = data['profile_url'];
+      });
+    } on PostgrestException catch (error) {
+      SnackBar(
+        content: Text(error.message),
+        backgroundColor: Theme.of(context).colorScheme.error,
+      );
+    } catch (error) {
+      SnackBar(
+        content: const Text('Unexpected error occurred'),
+        backgroundColor: Theme.of(context).colorScheme.error,
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          _loading = false;
+        });
+      }
+    }
   }
 
   // Update the user's profile in the database.
-  void _updateUserProfile(BuildContext context) async {
-    final userId = supabase.auth.currentUser!.id;
+  Future<void> _updateUserProfile(BuildContext context) async {
+    setState(() {
+      _loading = true;
+    });
+
+    final user = supabase.auth.currentUser;
     final updates = {
-      'id': userId,
-      'first_name': _firstNameController.text,
-      'last_name': _lastNameController.text,
+      'id': user!.id,
+      'first_name': _firstNameController.text.trim(),
+      'last_name': _lastNameController.text.trim(),
+      'updated_at': DateTime.now().toIso8601String(),
     };
 
     try {
-      await supabase.from('profiles').upsert(updates).eq('id', userId);
+      await supabase.from('profiles').upsert(updates);
+      if (mounted) {
+        setState(() {
+          fullName =
+              "${_firstNameController.text.toString()} ${_lastNameController.text.toString()}";
+        });
 
-      // Check if the widget is still mounted before calling setState
-      if (!mounted) return;
-
-      setState(() {
-        fullName =
-            "${_firstNameController.text.toString()} ${_lastNameController.text.toString()}";
-      });
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Profile updated successfully!')),
+        const SnackBar(
+          content: Text('Successfully updated profile!'),
+        );
+      }
+    } on PostgrestException catch (error) {
+      SnackBar(
+        content: Text(error.message),
+        backgroundColor: Theme.of(context).colorScheme.error,
       );
     } catch (error) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(error.toString())),
+      SnackBar(
+        content: const Text('Unexpected error occurred'),
+        backgroundColor: Theme.of(context).colorScheme.error,
       );
+    } finally {
+      if (mounted) {
+        setState(() {
+          _loading = false;
+        });
+      }
     }
   }
 

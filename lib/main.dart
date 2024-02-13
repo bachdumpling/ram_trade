@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:ram_trade/pages/home_screen.dart';
+import 'package:ram_trade/pages/market_screen.dart';
 import 'package:ram_trade/pages/profile_screen.dart';
 import 'package:ram_trade/pages/splash_screen.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -51,6 +52,7 @@ class _HomeState extends State<Home> {
   int _currentIndex = 0;
   final List<Widget> _screens = [
     const HomeScreen(),
+    const MarketScreen(),
     const ProfileScreen(),
     // const LoginScreen(),
   ];
@@ -58,9 +60,9 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('My App'),
-      ),
+      // appBar: AppBar(
+      //   title: const Text('Home'),
+      // ),
       body: _screens[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
@@ -73,9 +75,14 @@ class _HomeState extends State<Home> {
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Home',
-            backgroundColor: Colors.green.shade900,
-
+            backgroundColor: Colors.green,
           ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.store),
+            label: 'Market',
+            backgroundColor: Colors.green,
+          ),
+
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
             label: 'Profile',
