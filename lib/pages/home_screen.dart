@@ -10,7 +10,8 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen>
+    with AutomaticKeepAliveClientMixin {
   var _loading = true;
   List? items;
 
@@ -53,6 +54,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
+
     if (_loading) {
       // If still loading, show a loading indicator
       return Scaffold(
@@ -91,4 +94,7 @@ class _HomeScreenState extends State<HomeScreen> {
       );
     }
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

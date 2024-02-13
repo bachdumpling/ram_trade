@@ -48,22 +48,23 @@ class Home extends StatefulWidget {
   _HomeState createState() => _HomeState();
 }
 
-class _HomeState extends State<Home> {
+class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
   int _currentIndex = 0;
-  final List<Widget> _screens = [
-    const HomeScreen(),
-    const MarketScreen(),
-    const ProfileScreen(),
-    // const LoginScreen(),
+  final List<Widget> _screens = const [
+    HomeScreen(),
+    MarketScreen(),
+    ProfileScreen(),
   ];
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
+
     return Scaffold(
-      // appBar: AppBar(
-      //   title: const Text('Home'),
-      // ),
-      body: _screens[_currentIndex],
+      body: IndexedStack(
+        index: _currentIndex,
+        children: _screens,
+      ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: (index) {
@@ -82,17 +83,15 @@ class _HomeState extends State<Home> {
             label: 'Market',
             backgroundColor: Colors.green,
           ),
-
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
             label: 'Profile',
           ),
-          // BottomNavigationBarItem(
-          //   icon: Icon(Icons.settings),
-          //   label: 'Settings',
-          // ),
         ],
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
