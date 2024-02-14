@@ -9,6 +9,7 @@ class ItemCard extends StatelessWidget {
   final String price;
   final List photos;
   final Map item;
+  final Map user;
 
   const ItemCard({
     Key? key,
@@ -17,7 +18,8 @@ class ItemCard extends StatelessWidget {
     required this.listedTime,
     required this.price,
     required this.photos,
-    required this.item,
+    required this.item, 
+    required this.user,
   }) : super(key: key);
 
   @override
@@ -38,6 +40,7 @@ class ItemCard extends StatelessWidget {
               MaterialPageRoute(
                 builder: (context) => ItemDetailScreen(
                   item: item,
+                  user: user,
                 ),
               ),
             );

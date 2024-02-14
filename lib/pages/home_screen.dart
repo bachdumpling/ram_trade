@@ -21,12 +21,11 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   void initState() {
     super.initState();
-    _loadItems();
-    _loadCategories();
+    _loadRecentListings();
   }
 
   // pull items data from supabase
-  Future<void> _loadItems() async {
+  Future<void> _loadRecentListings() async {
     setState(() {
       _loading = true;
     });
@@ -35,34 +34,9 @@ class _HomeScreenState extends State<HomeScreen>
       // select items from the items table ordering from newest to oldests
       items = await supabase
           .from('items')
-          .select('*')
+          .select('itemid, title, description, price, photos, created_at, user:userid(*)')
           .order('created_at', ascending: false);
-    } on PostgrestException catch (error) {
-      SnackBar(
-        content: Text(error.message),
-        backgroundColor: Theme.of(context).colorScheme.error,
-      );
-      rethrow;
-    } catch (error) {
-      SnackBar(
-        content: Text(error.toString()),
-        backgroundColor: Theme.of(context).colorScheme.error,
-      );
-      rethrow;
-    } finally {
-      setState(() {
-        _loading = false;
-      });
-    }
-  }
 
-  Future<void> _loadCategories() async {
-    setState(() {
-      _loading = true;
-    });
-
-    try {
-      // select items from the items table ordering from newest to oldests
       categories = await supabase.from('categories').select('*');
     } on PostgrestException catch (error) {
       SnackBar(
@@ -83,9 +57,39 @@ class _HomeScreenState extends State<HomeScreen>
     }
   }
 
+  // Future<void> _loadCategories() async {
+  //   setState(() {
+  //     _loading = true;
+  //   });
+
+  //   try {
+  //     // select items from the items table ordering from newest to oldests
+  //     sellerName = await supabase.from('categories').select('*');
+  //   } on PostgrestException catch (error) {
+  //     SnackBar(
+  //       content: Text(error.message),
+  //       backgroundColor: Theme.of(context).colorScheme.error,
+  //     );
+  //     rethrow;
+  //   } catch (error) {
+  //     SnackBar(
+  //       content: Text(error.toString()),
+  //       backgroundColor: Theme.of(context).colorScheme.error,
+  //     );
+  //     rethrow;
+  //   } finally {
+  //     setState(() {
+  //       _loading = false;
+  //     });
+  //   }
+  // }
+
   @override
   Widget build(BuildContext context) {
     super.build(context); // Needed for AutomaticKeepAliveClientMixin
+
+    debugPrint(items?[0].toString());
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -112,8 +116,7 @@ class _HomeScreenState extends State<HomeScreen>
       drawer: const MyDrawer(),
       body: RefreshIndicator(
         onRefresh: () async {
-          await _loadItems();
-          await _loadCategories();
+          await _loadRecentListings();
         },
         child: SingleChildScrollView(
           // Use SingleChildScrollView
@@ -236,6 +239,7 @@ class _HomeScreenState extends State<HomeScreen>
     final createdAt = DateTime.parse(item['created_at']?.toString() ?? '');
 
     return ItemCard(
+      user: item['user'] as Map,
       item: item as Map,
       name: item['title'] as String,
       description: item['description'] as String,
