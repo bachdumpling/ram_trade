@@ -17,8 +17,8 @@ class ItemCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 30.0),
-      elevation: 2.0,
+      // margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+      elevation: 1.0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(6.0),
       ),

@@ -77,8 +77,8 @@ class _MarketScreenState extends State<MarketScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print(items);
-    print("categories: $categories");
+    // print(items);
+    // print("categories: $categories");
 
     return Scaffold(
       appBar: AppBar(
