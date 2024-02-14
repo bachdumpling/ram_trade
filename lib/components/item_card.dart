@@ -1,34 +1,46 @@
 import 'package:flutter/material.dart';
+import 'package:ram_trade/main.dart';
+import 'package:ram_trade/pages/item_detail.dart';
 
 class ItemCard extends StatelessWidget {
-  final String itemName;
+  final String name;
+  final String description;
   final Duration listedTime;
   final String price;
-  final String imageUrl;
+  final List photos;
+  final Map item;
 
   const ItemCard({
     Key? key,
-    required this.itemName,
+    required this.name,
+    required this.description,
     required this.listedTime,
     required this.price,
-    required this.imageUrl,
+    required this.photos,
+    required this.item,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      // margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-      elevation: 1.0,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(6.0),
-      ),
-      child: IntrinsicHeight(
-        // This ensures that the Row has a finite height
+    return SizedBox(
+      height: 125,
+      child: Card(
+        margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 6),
+        elevation: 1.0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(6.0),
+        ),
         child: InkWell(
           splashColor: Colors.blue.withAlpha(30),
           onTap: () {
-            debugPrint('Card tapped.');
-            // Add your onTap functionality here. For example, navigate to a detail page.
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ItemDetailScreen(
+                  item: item,
+                ),
+              ),
+            );
           },
           child: Row(
             crossAxisAlignment: CrossAxisAlignment
@@ -37,17 +49,17 @@ class ItemCard extends StatelessWidget {
               // Placeholder for the image
               Container(
                 clipBehavior: Clip.antiAlias,
-                width: 100,
-                height: 100,
+                width: 125,
+                height: 125,
                 decoration: const BoxDecoration(
-                  // color: Colors.grey[300],
+                  color: Colors.grey,
                   borderRadius: BorderRadius.horizontal(
                     left: Radius.circular(6.0),
                   ),
                 ),
-                child: imageUrl.isNotEmpty
+                child: photos.isNotEmpty
                     ? Image.network(
-                        imageUrl,
+                        photos[0],
                         width: 100,
                         height: 100,
                         fit: BoxFit.cover,
@@ -71,14 +83,14 @@ class ItemCard extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            itemName,
+                            name.toCapitalized(),
                             style: const TextStyle(
                               fontSize: 14.0,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                           Text(
-                            'Listed - ${_formatTimeDifference(listedTime)}',
+                            'Listed - ${listedTime.formatTimeDifference()}',
                             style: TextStyle(
                               fontSize: 12.0,
                               color: Colors.grey[800],
@@ -107,13 +119,5 @@ class ItemCard extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  String _formatTimeDifference(Duration difference) {
-    if (difference.inHours >= 1) {
-      return '${difference.inHours} hrs';
-    } else {
-      return '${difference.inMinutes} mins';
-    }
   }
 }

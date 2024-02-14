@@ -38,6 +38,7 @@ dependencies:
   supabase_flutter: ^2.3.2
   google_sign_in: ^6.2.1
   image_picker:
+  smooth_page_indicator:
 
 dev_dependencies:
   flutter_test:

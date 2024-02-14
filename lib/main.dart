@@ -1,5 +1,6 @@
 // ignore_for_file: library_private_types_in_public_api
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ram_trade/pages/home_screen.dart';
 import 'package:ram_trade/pages/market_screen.dart';
@@ -30,6 +31,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.red),
         useMaterial3: true,
+        splashColor: Colors.transparent,
+        highlightColor: Colors.transparent,
       ),
       home: const SplashPage(),
       routes: <String, WidgetBuilder>{
@@ -67,6 +70,8 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
         onTap: (index) {
           setState(() {
             _currentIndex = index;
@@ -74,18 +79,21 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
         },
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
+            icon: Icon(CupertinoIcons.home),
             label: 'Home',
             backgroundColor: Colors.green,
+            activeIcon: Icon(CupertinoIcons.house_fill),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.store),
+            icon: Icon(Icons.storefront_outlined),
             label: 'Market',
             backgroundColor: Colors.green,
+            activeIcon: Icon(Icons.storefront_rounded),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person),
+            icon: Icon(CupertinoIcons.person),
             label: 'Profile',
+            activeIcon: Icon(CupertinoIcons.person_fill),
           ),
         ],
       ),
@@ -94,4 +102,38 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
 
   @override
   bool get wantKeepAlive => true;
+}
+
+extension StringCasingExtension on String {
+  String toCapitalized() =>
+      length > 0 ? '${this[0].toUpperCase()}${substring(1).toLowerCase()}' : '';
+  String toTitleCase() => replaceAll(RegExp(' +'), ' ')
+      .split(' ')
+      .map((str) => str.toCapitalized())
+      .join(' ');
+}
+
+extension DurationFormattingExtension on Duration {
+  String formatTimeDifference() {
+    if (inSeconds < 60) {
+      return '${inSeconds} ${inSeconds == 1 ? 'sec' : 'secs'}';
+    } else if (inMinutes < 60) {
+      return '${inMinutes} ${inMinutes == 1 ? 'min' : 'mins'}';
+    } else if (inHours < 24) {
+      return '${inHours} ${inHours == 1 ? 'hr' : 'hrs'}';
+    } else if (inDays < 30) {
+      return '${inDays} ${inDays == 1 ? 'day' : 'days'}';
+    } else if (inDays < 365) {
+      return '${(inDays / 30).floor()} ${((inDays / 30).floor() == 1) ? 'month' : 'months'}';
+    } else {
+      return '${(inDays / 365).floor()} ${((inDays / 365).floor() == 1) ? 'year' : 'years'}';
+    }
+  }
+}
+
+extension DateTimeExtensions on DateTime {
+  Duration differenceFromNow() {
+    final now = DateTime.now();
+    return now.difference(this);
+  }
 }
