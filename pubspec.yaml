@@ -39,6 +39,7 @@ dependencies:
   google_sign_in: ^6.2.1
   image_picker:
   smooth_page_indicator:
+  uuid:
 
 dev_dependencies:
   flutter_test:

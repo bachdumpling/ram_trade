@@ -2,6 +2,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:ram_trade/pages/add_listing_screen.dart';
 import 'package:ram_trade/pages/home_screen.dart';
 import 'package:ram_trade/pages/market_screen.dart';
 import 'package:ram_trade/pages/profile_screen.dart';
@@ -39,6 +40,7 @@ class MyApp extends StatelessWidget {
         '/home': (_) => const Home(),
         '/login': (_) => const LoginScreen(),
         '/profile': (_) => const ProfileScreen(),
+        '/add-listing': (_) => const AddListingScreen(),
       },
     );
   }
@@ -55,6 +57,7 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
   int _currentIndex = 0;
   final List<Widget> _screens = const [
     HomeScreen(),
+    AddListingScreen(),
     MarketScreen(),
     ProfileScreen(),
   ];
@@ -69,7 +72,10 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
         children: _screens,
       ),
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
         currentIndex: _currentIndex,
+        selectedFontSize: 1.0,
+        unselectedFontSize: 1.0,
         showSelectedLabels: false,
         showUnselectedLabels: false,
         onTap: (index) {
@@ -79,21 +85,25 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
         },
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.home),
+            icon: Icon(CupertinoIcons.home, color: Colors.green),
             label: 'Home',
-            backgroundColor: Colors.green,
-            activeIcon: Icon(CupertinoIcons.house_fill),
+            activeIcon: Icon(CupertinoIcons.house_fill, color: Colors.green),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.storefront_outlined),
+            icon: Icon(CupertinoIcons.add_circled, color: Colors.green),
+            label: 'Home',
+            activeIcon:
+                Icon(CupertinoIcons.add_circled_solid, color: Colors.green),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.storefront_outlined, color: Colors.green),
             label: 'Market',
-            backgroundColor: Colors.green,
-            activeIcon: Icon(Icons.storefront_rounded),
+            activeIcon: Icon(Icons.storefront_rounded, color: Colors.green),
           ),
           BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.person),
+            icon: Icon(CupertinoIcons.person, color: Colors.green),
             label: 'Profile',
-            activeIcon: Icon(CupertinoIcons.person_fill),
+            activeIcon: Icon(CupertinoIcons.person_fill, color: Colors.green),
           ),
         ],
       ),

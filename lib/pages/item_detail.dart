@@ -15,7 +15,7 @@ class ItemDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = PageController();
     final String name = item['title'] ?? 'Name not available';
-    final double price = item['price'] ?? 'Price not available';
+    final dynamic price = item['price'] ?? 'Price not available';
     final String description =
         item['description'] ?? 'Description not available';
     final String sellerName =

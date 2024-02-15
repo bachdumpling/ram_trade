@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:ram_trade/pages/profile_screen.dart';
 import 'package:ram_trade/main.dart';
 
 class LoginScreen extends StatefulWidget {

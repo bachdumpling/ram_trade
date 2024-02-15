@@ -18,7 +18,7 @@ class ItemCard extends StatelessWidget {
     required this.listedTime,
     required this.price,
     required this.photos,
-    required this.item, 
+    required this.item,
     required this.user,
   }) : super(key: key);
 
@@ -61,17 +61,10 @@ class ItemCard extends StatelessWidget {
                   ),
                 ),
                 child: photos.isNotEmpty
-                    ? Image.network(
-                        photos[0],
-                        width: 100,
-                        height: 100,
-                        fit: BoxFit.cover,
-                      )
-                    : const Icon(
-                        Icons.image,
-                        size: 50,
-                        color: Colors.grey,
-                      ),
+                    ? Image.network(photos.first,
+                        width: 120, height: 120, fit: BoxFit.cover)
+                    : Image.asset("assets/images/default-profile-picture.png",
+                        width: 120, height: 120, fit: BoxFit.cover),
               ),
               // Item details
               Expanded(

@@ -34,7 +34,8 @@ class _HomeScreenState extends State<HomeScreen>
       // select items from the items table ordering from newest to oldests
       items = await supabase
           .from('items')
-          .select('itemid, title, description, price, photos, created_at, user:userid(*)')
+          .select(
+              'itemid, title, description, price, photos, created_at, user:userid(*)')
           .order('created_at', ascending: false);
 
       categories = await supabase.from('categories').select('*');
@@ -57,38 +58,11 @@ class _HomeScreenState extends State<HomeScreen>
     }
   }
 
-  // Future<void> _loadCategories() async {
-  //   setState(() {
-  //     _loading = true;
-  //   });
-
-  //   try {
-  //     // select items from the items table ordering from newest to oldests
-  //     sellerName = await supabase.from('categories').select('*');
-  //   } on PostgrestException catch (error) {
-  //     SnackBar(
-  //       content: Text(error.message),
-  //       backgroundColor: Theme.of(context).colorScheme.error,
-  //     );
-  //     rethrow;
-  //   } catch (error) {
-  //     SnackBar(
-  //       content: Text(error.toString()),
-  //       backgroundColor: Theme.of(context).colorScheme.error,
-  //     );
-  //     rethrow;
-  //   } finally {
-  //     setState(() {
-  //       _loading = false;
-  //     });
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
     super.build(context); // Needed for AutomaticKeepAliveClientMixin
 
-    debugPrint(items?[0].toString());
+    // debugPrint(items?[0].toString());
 
     return Scaffold(
       appBar: AppBar(
@@ -245,7 +219,7 @@ class _HomeScreenState extends State<HomeScreen>
       description: item['description'] as String,
       listedTime: createdAt.differenceFromNow(),
       price: item['price'].toString(),
-      photos: (item['photos'] as List).isNotEmpty ? item['photos'] : '',
+      photos: ((item['photos'] ?? []) as List),
     );
   }
 
