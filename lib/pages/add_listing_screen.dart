@@ -98,7 +98,6 @@ class _AddListingScreenState extends State<AddListingScreen> {
       }
 
       // Step 3: Update the listing with image URLs
-      debugPrint(uploadedImageUrls.toString());
       await supabase.from('items').update({
         'photos': uploadedImageUrls,
       }).match({'itemid': itemid});
@@ -193,6 +192,7 @@ class _AddListingScreenState extends State<AddListingScreen> {
                       value!.isEmpty ? 'Please enter a price' : null,
                   onSaved: (value) => _price = value!,
                 ),
+                const SizedBox(height: 20),
                 DropdownButtonFormField(
                   items: _conditions
                       .map((condition) => DropdownMenuItem(
