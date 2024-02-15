@@ -30,6 +30,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Ram Trade',
       theme: ThemeData(
+        fontFamily: 'Poppins',
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.red),
         useMaterial3: true,
         splashColor: Colors.transparent,
