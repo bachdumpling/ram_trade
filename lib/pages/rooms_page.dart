@@ -26,76 +26,81 @@ class RoomsPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Rooms'),
       ),
-      body: BlocBuilder<RoomCubit, RoomState>(
-        builder: (context, state) {
-          if (state is RoomsLoading) {
-            return preloader;
-          } else if (state is RoomsLoaded) {
-            final newUsers = state.newUsers;
-            final rooms = state.rooms;
-            return BlocBuilder<ProfilesCubit, ProfilesState>(
-              builder: (context, state) {
-                if (state is ProfilesLoaded) {
-                  final profiles = state.profiles;
-                  return Column(
-                    children: [
-                      _NewUsers(newUsers: newUsers),
-                      Expanded(
-                        child: ListView.builder(
-                          itemCount: rooms.length,
-                          itemBuilder: (context, index) {
-                            final room = rooms[index];
-                            final otherUser = profiles[room.otherUserId];
-
-                            return ListTile(
-                              onTap: () => Navigator.of(context)
-                                  .push(ChatPage.route(room.id)),
-                              leading: CircleAvatar(
-                                child: otherUser == null
-                                    ? preloader
-                                    : Text(otherUser.fullName.substring(0, 2)),
-                              ),
-                              title: Text(otherUser == null
-                                  ? 'Loading...'
-                                  : otherUser.fullName),
-                              subtitle: room.lastMessage != null
-                                  ? Text(
-                                      room.lastMessage!.content,
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                    )
-                                  : const Text('Room created'),
-                              trailing: Text(format(
-                                  room.lastMessage?.createdAt ?? room.createdAt,
-                                  locale: 'en_short')),
-                            );
-                          },
-                        ),
-                      ),
-                    ],
-                  );
-                } else {
-                  return preloader;
-                }
-              },
-            );
-          } else if (state is RoomsEmpty) {
-            final newUsers = state.newUsers;
-            return Column(
-              children: [
-                _NewUsers(newUsers: newUsers),
-                const Expanded(
-                  child: Center(
-                    child: Text('Start a chat by tapping on available users'),
-                  ),
-                ),
-              ],
-            );
-          } else if (state is RoomsError) {
-            return Center(child: Text(state.message));
-          }
-          throw UnimplementedError();
+      body: RefreshIndicator(
+        onRefresh: () async {
+          await BlocProvider.of<RoomCubit>(context).refreshRooms(context);
         },
+        child: BlocBuilder<RoomCubit, RoomState>(
+          builder: (context, state) {
+            if (state is RoomsLoading) {
+              return preloader;
+            } else if (state is RoomsLoaded) {
+              final newUsers = state.newUsers;
+              final rooms = state.rooms;
+              return BlocBuilder<ProfilesCubit, ProfilesState>(
+                builder: (context, state) {
+                  if (state is ProfilesLoaded) {
+                    final profiles = state.profiles;
+                    return Column(
+                      children: [
+                        _NewUsers(newUsers: newUsers),
+                        Expanded(
+                          child: ListView.builder(
+                            itemCount: rooms.length,
+                            itemBuilder: (context, index) {
+                              final room = rooms[index];
+                              final otherUser = profiles[room.otherUserId];
+        
+                              return ListTile(
+                                onTap: () => Navigator.of(context)
+                                    .push(ChatPage.route(room.id)),
+                                leading: CircleAvatar(
+                                  child: otherUser == null
+                                      ? preloader
+                                      : Text(otherUser.fullName.substring(0, 2)),
+                                ),
+                                title: Text(otherUser == null
+                                    ? 'Loading...'
+                                    : otherUser.fullName),
+                                subtitle: room.lastMessage != null
+                                    ? Text(
+                                        room.lastMessage!.content,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                      )
+                                    : const Text('Room created'),
+                                trailing: Text(format(
+                                    room.lastMessage?.createdAt ?? room.createdAt,
+                                    locale: 'en_short')),
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    );
+                  } else {
+                    return preloader;
+                  }
+                },
+              );
+            } else if (state is RoomsEmpty) {
+              final newUsers = state.newUsers;
+              return Column(
+                children: [
+                  _NewUsers(newUsers: newUsers),
+                  const Expanded(
+                    child: Center(
+                      child: Text('Start a chat by tapping on available users'),
+                    ),
+                  ),
+                ],
+              );
+            } else if (state is RoomsError) {
+              return Center(child: Text(state.message));
+            }
+            throw UnimplementedError();
+          },
+        ),
       ),
     );
   }

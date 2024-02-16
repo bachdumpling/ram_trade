@@ -76,6 +76,27 @@ class RoomCubit extends Cubit<RoomState> {
     });
   }
 
+  Future<void> refreshRooms(BuildContext context) async {
+    // Optionally show loading state
+    // emit(RoomsLoading());
+    try {
+      // Re-fetch the rooms and new users or perform necessary updates
+      // This is a simplified example. Adjust based on your actual data fetching logic.
+      _haveCalledGetRooms = false;
+      await initializeRooms(context);
+      // You might want to emit a new state here even if the data hasn't changed,
+      // to ensure the UI refreshes. Consider creating a new instance of the state.
+      // For example, if the data hasn't changed:
+      if (state is RoomsLoaded) {
+        final currentState = state as RoomsLoaded;
+        emit(RoomsLoaded(
+            rooms: currentState.rooms, newUsers: currentState.newUsers));
+      }
+    } catch (error) {
+      emit(RoomsError('Failed to refresh rooms.'));
+    }
+  }
+
   // Setup listeners to listen to the most recent message in each room
   void _getNewestMessage({
     required BuildContext context,
