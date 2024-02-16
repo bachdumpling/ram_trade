@@ -1,25 +1,37 @@
 {
-    // Use IntelliSense to learn about possible attributes.
-    // Hover to view descriptions of existing attributes.
-    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
-    "version": "0.2.0",
-    "configurations": [
-        {
-            "name": "ram_trade",
-            "request": "launch",
-            "type": "dart"
-        },
-        {
-            "name": "ram_trade (profile mode)",
-            "request": "launch",
-            "type": "dart",
-            "flutterMode": "profile"
-        },
-        {
-            "name": "ram_trade (release mode)",
-            "request": "launch",
-            "type": "dart",
-            "flutterMode": "release"
-        }
-    ]
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "ram_trade",
+      "request": "launch",
+      "type": "dart"
+    },
+    {
+      "name": "ram_trade (profile mode)",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "profile"
+    },
+    {
+      "name": "ram_trade (release mode)",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "release"
+    },
+    {
+      "name": "iPhone15Plus",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "DB1AF474-9994-458F-B1B9-052DAF6A55EC"
+    },
+    {
+      "name": "iPhone15Pro",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "DBF32010-4242-4208-A762-5E3529DCB2A2"
+    }
+  ]
 }
