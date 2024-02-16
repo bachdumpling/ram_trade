@@ -1,16 +1,22 @@
 // ignore_for_file: library_private_types_in_public_api
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ram_trade/cubits/profiles/profiles_cubit.dart';
+import 'package:ram_trade/cubits/rooms/rooms_cubit.dart';
 import 'package:ram_trade/pages/add_listing_screen.dart';
 import 'package:ram_trade/pages/home_screen.dart';
 import 'package:ram_trade/pages/market_screen.dart';
 import 'package:ram_trade/pages/profile_screen.dart';
+import 'package:ram_trade/pages/rooms_page.dart';
 import 'package:ram_trade/pages/splash_screen.dart';
+import 'package:ram_trade/utils/constants.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'pages/login_screen.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
   await Supabase.initialize(
     url: 'https://nnglwhgsrkbblfrnsfpg.supabase.co',
     anonKey:
@@ -19,30 +25,25 @@ void main() async {
   runApp(const MyApp());
 }
 
-final supabase = Supabase.instance.client;
-
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Ram Trade',
-      theme: ThemeData(
-        fontFamily: 'Poppins',
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.red),
-        useMaterial3: true,
-        splashColor: Colors.transparent,
-        highlightColor: Colors.transparent,
+    return BlocProvider<ProfilesCubit>(
+      create: (context) => ProfilesCubit(),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Ram Trade',
+        theme: appTheme,
+        home: const SplashPage(),
+        routes: <String, WidgetBuilder>{
+          '/home': (_) => const Home(),
+          '/login': (_) => const LoginScreen(),
+          '/profile': (_) => const ProfileScreen(),
+          '/add-listing': (_) => const AddListingScreen(),
+        },
       ),
-      home: const SplashPage(),
-      routes: <String, WidgetBuilder>{
-        '/home': (_) => const Home(),
-        '/login': (_) => const LoginScreen(),
-        '/profile': (_) => const ProfileScreen(),
-        '/add-listing': (_) => const AddListingScreen(),
-      },
     );
   }
 }
@@ -56,11 +57,15 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
   int _currentIndex = 0;
-  final List<Widget> _screens = const [
-    HomeScreen(),
-    AddListingScreen(),
-    MarketScreen(),
-    ProfileScreen(),
+  final List<Widget> _screens = [
+    const HomeScreen(),
+    const AddListingScreen(),
+    const MarketScreen(),
+    const ProfileScreen(),
+    BlocProvider<RoomCubit>(
+      create: (context) => RoomCubit()..initializeRooms(context),
+      child: const RoomsPage(),
+    ),
   ];
 
   @override
@@ -105,6 +110,11 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
             icon: Icon(CupertinoIcons.person, color: Colors.green),
             label: 'Profile',
             activeIcon: Icon(CupertinoIcons.person_fill, color: Colors.green),
+          ),
+           BottomNavigationBarItem(
+            icon: Icon(CupertinoIcons.chat_bubble, color: Colors.green),
+            label: 'Profile',
+            activeIcon: Icon(CupertinoIcons.chat_bubble_fill, color: Colors.green),
           ),
         ],
       ),

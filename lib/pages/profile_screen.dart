@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ram_trade/components/profile_picture.dart';
-import 'package:ram_trade/main.dart';
 import 'package:ram_trade/pages/login_screen.dart';
+import 'package:ram_trade/utils/constants.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class ProfileScreen extends StatefulWidget {

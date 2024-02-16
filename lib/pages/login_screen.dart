@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:ram_trade/utils/constants.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:ram_trade/main.dart';
 
@@ -80,19 +81,19 @@ class _LoginScreenState extends State<LoginScreen> {
       }
 
       final String? email = googleUser.email;
-      if (email == null || !email.endsWith('@fordham.edu')) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Only Fordham University emails are allowed.',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14,
-                    color: Colors.red)),
-          ),
-        );
-        return;
-      }
+      // if (email == null || !email.endsWith('@fordham.edu')) {
+      //   ScaffoldMessenger.of(context).showSnackBar(
+      //     const SnackBar(
+      //       content: Text('Only Fordham University emails are allowed.',
+      //           textAlign: TextAlign.center,
+      //           style: TextStyle(
+      //               fontWeight: FontWeight.bold,
+      //               fontSize: 14,
+      //               color: Colors.red)),
+      //     ),
+      //   );
+      //   return;
+      // }
 
       //  If the email domain is correct, proceed with the sign in
       final authResponse = await supabase.auth.signInWithIdToken(

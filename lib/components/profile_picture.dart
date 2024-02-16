@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:ram_trade/main.dart';
+import 'package:ram_trade/utils/constants.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class ProfilePicture extends StatelessWidget {

@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ram_trade/components/item_card.dart';
 import 'package:ram_trade/main.dart';
+import 'package:ram_trade/utils/constants.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:ram_trade/components/my_drawer.dart';
 
@@ -213,7 +214,7 @@ class _HomeScreenState extends State<HomeScreen>
     final createdAt = DateTime.parse(item['created_at']?.toString() ?? '');
 
     return ItemCard(
-      user: item['user'] as Map,
+      user: ((item['user'] ?? {})  as Map),
       item: item as Map,
       name: item['title'] as String,
       description: item['description'] as String,

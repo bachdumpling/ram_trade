@@ -62,5 +62,7 @@
 	<string>$(PRODUCT_NAME) requires access to the camera</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>$(PRODUCT_NAME) requires access to the microphone</string>
+	<key>FLTEnableImpeller</key>
+	<false />
 </dict>
 </plist>

@@ -18,11 +18,16 @@ class ItemDetailScreen extends StatelessWidget {
     final dynamic price = item['price'] ?? 'Price not available';
     final String description =
         item['description'] ?? 'Description not available';
-    final String sellerName =
-        user['first_name'] + ' ' + user['last_name'] ?? 'Seller not available';
     final List photos = item['photos'] ?? [];
     final DateTime createdAt =
         DateTime.parse(item['created_at']?.toString() ?? '');
+    String sellerName = [user['first_name'], user['last_name']]
+        .where((part) => part != null && part.isNotEmpty)
+        .join(' ');
+
+    if (sellerName.isEmpty) {
+      sellerName = 'Seller not available';
+    }
 
     return Scaffold(
       extendBody: true,
@@ -218,7 +223,8 @@ class ItemDetailScreen extends StatelessWidget {
                             borderRadius: BorderRadius.circular(6))),
                     child: const Padding(
                       padding: EdgeInsets.symmetric(vertical: 18.0),
-                      child: Text('Make offer', style: TextStyle(fontSize: 16, color: Colors.black)),
+                      child: Text('Make offer',
+                          style: TextStyle(fontSize: 16, color: Colors.black)),
                     ),
                   ),
                 ),
@@ -236,7 +242,8 @@ class ItemDetailScreen extends StatelessWidget {
                             borderRadius: BorderRadius.circular(6))),
                     child: const Padding(
                       padding: EdgeInsets.symmetric(vertical: 18.0),
-                      child: Text('Buy', style: TextStyle(fontSize: 16,color: Colors.white)),
+                      child: Text('Buy',
+                          style: TextStyle(fontSize: 16, color: Colors.white)),
                     ),
                   ),
                 ),

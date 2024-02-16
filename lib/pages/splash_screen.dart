@@ -1,6 +1,7 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
-import 'package:ram_trade/main.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:ram_trade/utils/constants.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -22,11 +23,17 @@ class _SplashPageState extends State<SplashPage> {
       return;
     }
 
-    final session = supabase.auth.currentSession;
-    if (session != null) {
-      Navigator.of(context).pushReplacementNamed('/home');
-    } else {
-      Navigator.of(context).pushReplacementNamed('/login');
+    try {
+      final session = supabase.auth.currentSession;
+      if (session != null) {
+        Navigator.of(context).pushReplacementNamed('/home');
+      } else {
+        Navigator.of(context).pushReplacementNamed('/login');
+      }
+    } catch (_) {
+      context.showErrorSnackBar(
+        message: 'Error occured during session refresh',
+      );
     }
   }
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 /// Supabase client
@@ -19,7 +20,13 @@ const unexpectedErrorMessage = 'Unexpected error occurred.';
 
 /// Basic theme to change the look and feel of the app
 final appTheme = ThemeData.light().copyWith(
+  colorScheme: ColorScheme.fromSeed(seedColor: Colors.red),
+  splashColor: Colors.transparent,
+  highlightColor: Colors.transparent,
   primaryColorDark: Colors.orange,
+  textTheme: GoogleFonts.inconsolataTextTheme(
+    ThemeData.light().textTheme
+  ),
   appBarTheme: const AppBarTheme(
     elevation: 1,
     backgroundColor: Colors.white,
