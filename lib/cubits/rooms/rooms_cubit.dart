@@ -14,10 +14,10 @@ class RoomCubit extends Cubit<RoomState> {
 
   final Map<String, StreamSubscription<Message?>> _messageSubscriptions = {};
 
-  late final String _myUserId;
+  late String _myUserId;
 
   /// List of new users of the app for the user to start talking to
-  late final List<Profile> _newUsers;
+  late List<Profile> _newUsers;
 
   /// List of rooms
   List<Room> _rooms = [];
@@ -44,8 +44,8 @@ class RoomCubit extends Cubit<RoomState> {
     } catch (_) {
       emit(RoomsError('Error loading new users'));
     }
-    debugPrint('data: $data');
-    debugPrint('my userid: $_myUserId');
+    // debugPrint('data: $data');
+    // debugPrint('my userid: $_myUserId');
 
     final rows = List<Map<String, dynamic>>.from(data);
     _newUsers = rows.map(Profile.fromMap).toList();
@@ -77,23 +77,18 @@ class RoomCubit extends Cubit<RoomState> {
   }
 
   Future<void> refreshRooms(BuildContext context) async {
-    // Optionally show loading state
-    // emit(RoomsLoading());
     try {
-      // Re-fetch the rooms and new users or perform necessary updates
-      // This is a simplified example. Adjust based on your actual data fetching logic.
       _haveCalledGetRooms = false;
+
       await initializeRooms(context);
-      // You might want to emit a new state here even if the data hasn't changed,
-      // to ensure the UI refreshes. Consider creating a new instance of the state.
-      // For example, if the data hasn't changed:
       if (state is RoomsLoaded) {
         final currentState = state as RoomsLoaded;
         emit(RoomsLoaded(
             rooms: currentState.rooms, newUsers: currentState.newUsers));
       }
     } catch (error) {
-      emit(RoomsError('Failed to refresh rooms.'));
+      debugPrint(error.toString()); // Log the error to the console
+      emit(RoomsError('Failed to refresh rooms. Error: $error'));
     }
   }
 

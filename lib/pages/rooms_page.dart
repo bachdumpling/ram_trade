@@ -50,14 +50,15 @@ class RoomsPage extends StatelessWidget {
                             itemBuilder: (context, index) {
                               final room = rooms[index];
                               final otherUser = profiles[room.otherUserId];
-        
+
                               return ListTile(
                                 onTap: () => Navigator.of(context)
                                     .push(ChatPage.route(room.id)),
                                 leading: CircleAvatar(
                                   child: otherUser == null
                                       ? preloader
-                                      : Text(otherUser.fullName.substring(0, 2)),
+                                      : Text(
+                                          otherUser.fullName.substring(0, 2)),
                                 ),
                                 title: Text(otherUser == null
                                     ? 'Loading...'
@@ -70,7 +71,8 @@ class RoomsPage extends StatelessWidget {
                                       )
                                     : const Text('Room created'),
                                 trailing: Text(format(
-                                    room.lastMessage?.createdAt ?? room.createdAt,
+                                    room.lastMessage?.createdAt ??
+                                        room.createdAt,
                                     locale: 'en_short')),
                               );
                             },
