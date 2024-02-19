@@ -24,7 +24,7 @@ final appTheme = ThemeData.light().copyWith(
   splashColor: Colors.transparent,
   highlightColor: Colors.transparent,
   primaryColorDark: Colors.orange,
-  textTheme: GoogleFonts.inconsolataTextTheme(
+  textTheme: GoogleFonts.robotoTextTheme(
     ThemeData.light().textTheme
   ),
   appBarTheme: const AppBarTheme(

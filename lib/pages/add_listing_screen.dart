@@ -18,18 +18,53 @@ class _AddListingScreenState extends State<AddListingScreen> {
   String _itemName = '';
   String _description = '';
   String _price = '';
-  String _categoryid = '';
+  List? _categories;
+  int? _selectedCategory;
   final List _conditions = ['New', 'Used', 'Like New'];
-  String _selectedCondition = 'New';
+  String? _selectedCondition;
 
   final ImagePicker _picker = ImagePicker();
   final List<XFile> _selectedImages = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadRecentListings();
+  }
 
   Future<void> _selectImages() async {
     final List<XFile> pickedFiles = await _picker.pickMultiImage();
     if (pickedFiles.isNotEmpty) {
       setState(() {
         _selectedImages.addAll(pickedFiles);
+      });
+    }
+  }
+
+  // pull items data from supabase
+  Future<void> _loadRecentListings() async {
+    setState(() {
+      _loading = true;
+    });
+
+    try {
+      // select items from the items table ordering from newest to oldests
+      _categories = await supabase.from('categories').select('*');
+    } on PostgrestException catch (error) {
+      SnackBar(
+        content: Text(error.message),
+        backgroundColor: Theme.of(context).colorScheme.error,
+      );
+      rethrow;
+    } catch (error) {
+      SnackBar(
+        content: Text(error.toString()),
+        backgroundColor: Theme.of(context).colorScheme.error,
+      );
+      rethrow;
+    } finally {
+      setState(() {
+        _loading = false;
       });
     }
   }
@@ -42,7 +77,7 @@ class _AddListingScreenState extends State<AddListingScreen> {
       print('Description: $_description');
       print('Price: ${double.tryParse(_price)}');
       print('Images: $_selectedImages');
-      print('Category ID: ${int.tryParse(_categoryid)}');
+      print('Category ID: $_selectedCategory');
       print('Condition: $_selectedCondition');
     }
   }
@@ -63,7 +98,7 @@ class _AddListingScreenState extends State<AddListingScreen> {
     final createItem = {
       "itemid": itemid,
       'userid': userid,
-      'categoryid': int.tryParse(_categoryid),
+      'categoryid': _selectedCategory,
       'title': _itemName,
       'description': _description,
       'price': double.tryParse(_price),
@@ -179,11 +214,18 @@ class _AddListingScreenState extends State<AddListingScreen> {
                       value!.isEmpty ? 'Please enter a description' : null,
                   onSaved: (value) => _description = value!,
                 ),
-                TextFormField(
-                  decoration: const InputDecoration(labelText: 'Category ID'),
-                  validator: (value) =>
-                      value!.isEmpty ? 'Please enter a category id' : null,
-                  onSaved: (value) => _categoryid = value!,
+                DropdownButtonFormField(
+                  items: _categories?.map((category) {
+                        return DropdownMenuItem(
+                          value: category['categoryid'],
+                          child: Text(category['name']),
+                        );
+                      }).toList() ??
+                      [],
+                  onChanged: (value) {
+                    _selectedCategory = int.tryParse(value.toString()) as int;
+                  },
+                  hint: const Text('Select Condition'),
                 ),
                 TextFormField(
                   decoration: const InputDecoration(labelText: 'Price'),
@@ -208,7 +250,7 @@ class _AddListingScreenState extends State<AddListingScreen> {
                 const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: _loading ? null : () => _uploadListing(context),
-                  // onPressed: _loading ? null : () => _submitForm(),
+                  // onPressed: _loading ? null : () => _submitForm(),s
                   style: ElevatedButton.styleFrom(
                     minimumSize: const Size.fromHeight(50), // fixed height
                   ),

@@ -2,11 +2,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ram_trade/cubits/favorites/favorites_cubit.dart';
 import 'package:ram_trade/cubits/profiles/profiles_cubit.dart';
 import 'package:ram_trade/cubits/rooms/rooms_cubit.dart';
 import 'package:ram_trade/pages/add_listing_screen.dart';
 import 'package:ram_trade/pages/home_screen.dart';
-import 'package:ram_trade/pages/market_screen.dart';
+import 'package:ram_trade/pages/favorite_items_screen.dart';
 import 'package:ram_trade/pages/profile_screen.dart';
 import 'package:ram_trade/pages/rooms_page.dart';
 import 'package:ram_trade/pages/splash_screen.dart';
@@ -59,9 +60,9 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
   int _currentIndex = 0;
   final List<Widget> _screens = [
     const HomeScreen(),
-    const AddListingScreen(),
-    const MarketScreen(),
     const ProfileScreen(),
+    const AddListingScreen(),
+    const FavoriteItemsScreen(),
     BlocProvider<RoomCubit>(
       create: (context) => RoomCubit()..initializeRooms(context),
       child: const RoomsPage(),
@@ -90,31 +91,41 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
           });
         },
         items: const [
+          // Home
           BottomNavigationBarItem(
             icon: Icon(CupertinoIcons.home, color: Colors.green),
             label: 'Home',
             activeIcon: Icon(CupertinoIcons.house_fill, color: Colors.green),
           ),
-          BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.add_circled, color: Colors.green),
-            label: 'Home',
-            activeIcon:
-                Icon(CupertinoIcons.add_circled_solid, color: Colors.green),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.storefront_outlined, color: Colors.green),
-            label: 'Market',
-            activeIcon: Icon(Icons.storefront_rounded, color: Colors.green),
-          ),
+
+          // Profile
           BottomNavigationBarItem(
             icon: Icon(CupertinoIcons.person, color: Colors.green),
             label: 'Profile',
             activeIcon: Icon(CupertinoIcons.person_fill, color: Colors.green),
           ),
-           BottomNavigationBarItem(
+
+          // Add Listing
+          BottomNavigationBarItem(
+            icon: Icon(CupertinoIcons.add_circled, color: Colors.green),
+            label: 'Add Listing',
+            activeIcon:
+                Icon(CupertinoIcons.add_circled_solid, color: Colors.green),
+          ),
+
+          // Favorite Items
+          BottomNavigationBarItem(
+            icon: Icon(CupertinoIcons.heart, color: Colors.green),
+            label: 'Market',
+            activeIcon: Icon(CupertinoIcons.heart_fill, color: Colors.green),
+          ),
+
+          // Chat
+          BottomNavigationBarItem(
             icon: Icon(CupertinoIcons.chat_bubble, color: Colors.green),
-            label: 'Profile',
-            activeIcon: Icon(CupertinoIcons.chat_bubble_fill, color: Colors.green),
+            label: 'Chat',
+            activeIcon:
+                Icon(CupertinoIcons.chat_bubble_fill, color: Colors.green),
           ),
         ],
       ),
