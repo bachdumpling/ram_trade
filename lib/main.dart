@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ram_trade/cubits/favorites/favorites_cubit.dart';
+import 'package:ram_trade/cubits/items/items_cubit.dart';
 import 'package:ram_trade/cubits/profiles/profiles_cubit.dart';
 import 'package:ram_trade/cubits/rooms/rooms_cubit.dart';
 import 'package:ram_trade/pages/add_listing_screen.dart';
@@ -43,6 +44,7 @@ class MyApp extends StatelessWidget {
           '/login': (_) => const LoginScreen(),
           '/profile': (_) => const ProfileScreen(),
           '/add-listing': (_) => const AddListingScreen(),
+          '/favorite-items': (_) => const FavoriteItemsScreen(),
         },
       ),
     );
@@ -59,7 +61,10 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
   int _currentIndex = 0;
   final List<Widget> _screens = [
-    const HomeScreen(),
+    BlocProvider<ItemsCubit>(
+      create: (context) => ItemsCubit()..loadItems(),
+      child: const HomeScreen(),
+    ),
     const ProfileScreen(),
     const AddListingScreen(),
     const FavoriteItemsScreen(),

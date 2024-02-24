@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:ram_trade/utils/hex_color.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 /// Supabase client
@@ -20,13 +21,10 @@ const unexpectedErrorMessage = 'Unexpected error occurred.';
 
 /// Basic theme to change the look and feel of the app
 final appTheme = ThemeData.light().copyWith(
-  colorScheme: ColorScheme.fromSeed(seedColor: Colors.red),
+  colorScheme: ColorScheme.fromSeed(seedColor: HexColor("AB4548")),
   splashColor: Colors.transparent,
   highlightColor: Colors.transparent,
   primaryColorDark: Colors.orange,
-  textTheme: GoogleFonts.robotoTextTheme(
-    ThemeData.light().textTheme
-  ),
   appBarTheme: const AppBarTheme(
     elevation: 1,
     backgroundColor: Colors.white,
@@ -36,34 +34,34 @@ final appTheme = ThemeData.light().copyWith(
       fontSize: 18,
     ),
   ),
-  primaryColor: Colors.orange,
+  primaryColor: HexColor("AB4548"),
   textButtonTheme: TextButtonThemeData(
     style: TextButton.styleFrom(
-      foregroundColor: Colors.orange,
+      foregroundColor: Colors.black,
     ),
   ),
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: ElevatedButton.styleFrom(
       foregroundColor: Colors.white,
-      backgroundColor: Colors.orange,
+      backgroundColor: HexColor("AB4548"),
     ),
   ),
   inputDecorationTheme: InputDecorationTheme(
-    floatingLabelStyle: const TextStyle(
-      color: Colors.orange,
+    floatingLabelStyle: TextStyle(
+      color: HexColor("AB4548"),
     ),
     border: OutlineInputBorder(
       borderRadius: BorderRadius.circular(12),
-      borderSide: const BorderSide(
-        color: Colors.grey,
+      borderSide: BorderSide(
+        color: HexColor("AB4548"),
         width: 2,
       ),
     ),
-    focusColor: Colors.orange,
+    focusColor: HexColor("AB4548"),
     focusedBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(12),
-      borderSide: const BorderSide(
-        color: Colors.orange,
+      borderSide: BorderSide(
+        color: HexColor("AB4548"),
         width: 2,
       ),
     ),

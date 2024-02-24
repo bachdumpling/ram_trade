@@ -1,6 +1,9 @@
+// ignore_for_file: sort_child_properties_last
+
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:ram_trade/utils/constants.dart';
+import 'package:ram_trade/utils/hex_color.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:ram_trade/main.dart';
 
@@ -16,21 +19,6 @@ class _LoginScreenState extends State<LoginScreen> {
   void initState() {
     _setupAuthListener();
     super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Login'),
-      ),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () => _googleSignIn(),
-          child: const Text('Sign in with Google'),
-        ),
-      ),
-    );
   }
 
   void _setupAuthListener() {
@@ -133,6 +121,99 @@ class _LoginScreenState extends State<LoginScreen> {
         'profile_url': user.userMetadata?['avatar_url']
       });
     }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Stack(
+        fit: StackFit.expand,
+        children: [
+          // Background image
+          Container(
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/images/splash-screen-image.png'),
+                fit: BoxFit.cover,
+                alignment: Alignment.center,
+              ),
+            ),
+          ),
+          // Overlay with semi-transparent black color
+          Container(
+            color: Colors.black.withOpacity(0.2), // Adjust opacity as needed
+          ),
+          // Content
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(
+              alignment: Alignment.center,
+              height: 300,
+              width: double.infinity,
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(16),
+                  topRight: Radius.circular(16),
+                ),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Column(
+                        children: [
+                          const Text(
+                            'Discover what your fellow Rams have to offer',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.w800,
+                              color: Colors.black,
+                            ),
+                          ),
+                          const SizedBox(height: 24),
+                          Text(
+                            'Marketplace to buy, sell or trade items amongst Fordham students',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: HexColor("#888888"),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                    SizedBox(
+                      height: 48,
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () => _googleSignIn(),
+                        child: const Text("Continue with Google"),
+                        style: ElevatedButton.styleFrom(
+                          textStyle: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(6)),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
 

@@ -85,27 +85,78 @@ class _MFavoriteItemsScreenState extends State<FavoriteItemsScreen> {
     return BlocProvider(
       create: (context) => FavoritesCubit(),
       child: Scaffold(
-        appBar: AppBar(title: const Text("Favorite Items")),
+        appBar: AppBar(
+          title: const Text('Favorite',
+              style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold)),
+          elevation: 0,
+          actions: <Widget>[
+            IconButton(
+              icon: const Icon(Icons.search),
+              onPressed: () {
+                // Implement search functionality
+              },
+            ),
+            IconButton(
+              icon: const Icon(Icons.more_vert),
+              onPressed: () {
+                // Implement more options
+              },
+            ),
+          ],
+        ),
         body: RefreshIndicator(
           onRefresh: _loadItems,
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                Column(
                   children: [
-                    Text("Items: ${favoriteItems?.length}"),
-                    FilterComponent(
-                      onSortChanged: (SortOption selectedSort) {
-                        _applySort(selectedSort);
-                      },
+                    const Divider(
+                      color: Colors.grey,
+                      thickness: 0.5,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 0, horizontal: 16),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          favoriteItems?.length != null
+                              ? Text(
+                                  "Items (${favoriteItems?.length})",
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.grey[800],
+                                  ),
+                                )
+                              : const Text("Items #",
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.grey,
+                                  )),
+                          FilterComponent(
+                            onSortChanged: (SortOption selectedSort) {
+                              _applySort(selectedSort);
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                    const Divider(
+                      color: Colors.grey,
+                      thickness: 0.5,
                     ),
                   ],
                 ),
                 const SizedBox(height: 16),
-                Expanded(child: _buildItemList()),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: _buildItemList(),
+                ), // Expanded is no longer needed
               ],
             ),
           ),
@@ -117,23 +168,27 @@ class _MFavoriteItemsScreenState extends State<FavoriteItemsScreen> {
   Widget _buildItemList() {
     if (_loading) {
       return ListView(
-        physics: const AlwaysScrollableScrollPhysics(),
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(), // Adjust physics here
         children: const [Center(child: CircularProgressIndicator())],
       );
     } else if (favoriteItems == null || favoriteItems!.isEmpty) {
       return ListView(
-        physics: const AlwaysScrollableScrollPhysics(),
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(), // Adjust physics here
         children: const [Center(child: Text("No favorite items."))],
       );
     } else {
       return GridView.builder(
-        physics: const AlwaysScrollableScrollPhysics(),
-        shrinkWrap: true,
+        physics:
+            const NeverScrollableScrollPhysics(), // Make GridView non-scrollable
+        shrinkWrap:
+            true, // Allow GridView to size itself according to its content
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
-          crossAxisSpacing: 6.0,
-          mainAxisSpacing: 6.0,
-          childAspectRatio: 0.67,
+          crossAxisSpacing: 10.0,
+          mainAxisSpacing: 10.0,
+          childAspectRatio: 0.69,
         ),
         itemCount: favoriteItems!.length,
         itemBuilder: (context, index) {
