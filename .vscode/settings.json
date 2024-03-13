@@ -2,5 +2,28 @@
     "cmake.configureOnOpen": true,
     "cSpell.words": [
         "Postgrest"
-    ]
+    ],
+    "dart.flutterRunAdditionalArgs": [
+        "--web-port=3000"
+    ],
+    "workbench.colorCustomizations": {
+        "activityBar.activeBackground": "#4be174",
+        "activityBar.background": "#4be174",
+        "activityBar.foreground": "#15202b",
+        "activityBar.inactiveForeground": "#15202b99",
+        "activityBarBadge.background": "#9676e8",
+        "activityBarBadge.foreground": "#15202b",
+        "commandCenter.border": "#15202b99",
+        "sash.hoverBorder": "#4be174",
+        "statusBar.background": "#24d554",
+        "statusBar.foreground": "#15202b",
+        "statusBarItem.hoverBackground": "#1da943",
+        "statusBarItem.remoteBackground": "#24d554",
+        "statusBarItem.remoteForeground": "#15202b",
+        "titleBar.activeBackground": "#24d554",
+        "titleBar.activeForeground": "#15202b",
+        "titleBar.inactiveBackground": "#24d55499",
+        "titleBar.inactiveForeground": "#15202b99"
+    },
+    "peacock.color": "#24d554"
 }

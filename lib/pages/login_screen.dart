@@ -1,5 +1,4 @@
 // ignore_for_file: sort_child_properties_last
-
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:ram_trade/utils/constants.dart';
